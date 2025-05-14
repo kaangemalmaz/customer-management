@@ -1,10 +1,7 @@
 import bcrypt from "bcryptjs";
 import { db } from "./db.js";
 
-const DEFAULT_USERNAME = "admin";
-const DEFAULT_PASSWORD = "admin123";
-
-export async function initializeDatabase() {
+export const initializeDatabase = async () => {
   await db.query(`
     CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
@@ -24,17 +21,17 @@ export async function initializeDatabase() {
   `);
 
   const result = await db.query("SELECT * FROM users WHERE username = $1", [
-    DEFAULT_USERNAME,
+    process.env.DEFAULT_USERNAME,
   ]);
 
   if (result.rows.length === 0) {
-    const hash = await bcrypt.hash(DEFAULT_PASSWORD, 10);
+    const hash = await bcrypt.hash(process.env.DEFAULT_PASSWORD, 10);
     await db.query(
       `INSERT INTO users (username, password_hash) VALUES ($1, $2)`,
-      [DEFAULT_USERNAME, hash]
+      [process.env.DEFAULT_USERNAME, hash]
     );
     console.log("Default kullanici eklendi.");
   } else {
     console.log("Default kullanici kayitli.");
   }
-}
+};

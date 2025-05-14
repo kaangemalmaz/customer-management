@@ -1,6 +1,9 @@
-import pg from "pg";
-const { Pool } = pg;
+import { Pool } from "pg";
+import dotenv from "dotenv";
+dotenv.config();
 
-export const db = new Pool({
-  connectionString: "postgres://postgres:1@localhost:5432/deneme",
+const db = new Pool({
+  connectionString: process.env.DATABASE_URL,
 });
+
+export { db };

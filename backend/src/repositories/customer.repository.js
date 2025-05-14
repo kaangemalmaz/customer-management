@@ -1,6 +1,5 @@
 import { db } from "../config/db.js";
 import { Customer } from "../entities/customer.entity.js";
-import { v4 as uuidv4 } from "uuid";
 import { ApiError } from "../utils/ApiError.js";
 
 export async function createCustomer({
