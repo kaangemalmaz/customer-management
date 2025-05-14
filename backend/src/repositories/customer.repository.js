@@ -63,11 +63,11 @@ export async function getCustomerById(id) {
 
 export async function updateCustomer(id, fields) {
   try {
-    const { firstName, lastName, nationalId } = fields;
+    const { firstName, lastName, nationalId, registerDate } = fields;
 
     const result = await db.query(
-      `UPDATE customers SET first_name = $1, last_name = $2, nationalid = $3 WHERE id = $4 RETURNING *`,
-      [firstName, lastName, nationalId, id]
+      `UPDATE customers SET first_name = $1, last_name = $2, nationalid = $3, register_date = $4 WHERE id = $5 RETURNING *`,
+      [firstName, lastName, nationalId, registerDate, id]
     );
     return result.rows[0] || null;
   } catch (error) {

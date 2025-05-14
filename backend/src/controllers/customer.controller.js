@@ -9,9 +9,9 @@ import { ApiSuccess } from "../utils/ApiSuccess.js";
 
 export async function createCustomer(req, res, next) {
   try {
-    const { firstName, lastName, nationalId } = req.body;
+    const { firstName, lastName, nationalId, registerDate } = req.body;
 
-    if (!firstName || !lastName || !nationalId) {
+    if (!firstName || !lastName || !nationalId || !registerDate) {
       throw new ApiError(400, "Tüm müşteri bilgileri zorunludur");
     }
 

@@ -9,7 +9,7 @@ import {
 import { ApiError } from "../utils/ApiError.js";
 
 export const addCustomer = async (data) => {
-  const { firstName, lastName, nationalId } = data;
+  const { firstName, lastName, nationalId, registerDate } = data;
 
   if (!/^\d{11}$/.test(nationalId)) {
     throw new ApiError(400, "TC Kimlik Numarası 11 haneli olmalıdır");
@@ -23,7 +23,7 @@ export const addCustomer = async (data) => {
     );
   }
 
-  const registerDate = new Date().toISOString();
+  //const registerDate = new Date().toISOString();
   return await createCustomer({
     firstName,
     lastName,
