@@ -1,0 +1,256 @@
+<app-navbar></app-navbar>
+
+<div class="container">
+  <button
+    type="button"
+    class="btn btn-outline-success"
+    data-bs-toggle="modal"
+    data-bs-target="#addModal"
+  >
+    <i class="fa fa-plus"></i>
+  </button>
+
+  @if (customerList.length > 0) {
+
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Müşteri Adı</th>
+        <th scope="col">Müşteri Soyadı</th>
+        <th scope="col">Tc Kimlik Numarası</th>
+        <th scope="col">Kayit Tarihi</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (customer of customerList; track customer.id) {
+      <tr scope="row">
+        <td scope="row">{{ customer.id }}</td>
+        <td scope="row">{{ customer.firstName }}</td>
+        <td scope="row">{{ customer.lastName }}</td>
+        <td scope="row">{{ customer.nationalId }}</td>
+        <td scope="row">{{ customer.registerDate }}</td>
+        <td scope="row">
+          <button
+            class="btn btn-outline-warning btn-sm"
+            (click)="get(customer)"
+            data-bs-toggle="modal"
+            data-bs-target="#editModal"
+          >
+            <i class="fa fa-edit"></i>
+          </button>
+          <button
+            class="btn btn-outline-danger btn-sm mx-1"
+            (click)="removeById(customer)"
+          >
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  } @else {
+  <div class="alert alert-info" role="alert">
+    Herhangi kayıtlı bir müşteri bulunmamaktadır.
+  </div>
+  }
+</div>
+
+<!-- Add Modal -->
+<div
+  class="modal fade"
+  id="addModal"
+  tabindex="-1"
+  aria-labelledby="addModal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addModal">Müşteri ekle</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form [formGroup]="customerAddForm" (ngSubmit)="save()">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="firstName" class="form-label">Müşteri Adı</label>
+            <input
+              id="firstName"
+              class="form-control"
+              type="text"
+              formControlName="firstName"
+              [class.is-invalid]="isInvalid(customerAddForm, 'firstName')"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="isInvalid(customerAddForm, 'firstName')"
+            >
+              {{ getErrorMessage(customerAddForm, "firstName") }}
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="lastName" class="form-label">Müşteri Soyadı</label>
+            <input
+              id="lastName"
+              class="form-control"
+              type="text"
+              formControlName="lastName"
+              [class.is-invalid]="isInvalid(customerAddForm, 'lastName')"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="isInvalid(customerAddForm, 'lastName')"
+            >
+              {{ getErrorMessage(customerAddForm, "lastName") }}
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="nationalId" class="form-label"
+              >Müşteri T.C. Kimlik Numarası</label
+            >
+            <input
+              id="nationalId"
+              class="form-control"
+              type="text"
+              formControlName="nationalId"
+              [class.is-invalid]="isInvalid(customerAddForm, 'nationalId')"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="isInvalid(customerAddForm, 'nationalId')"
+            >
+              {{ getErrorMessage(customerAddForm, "nationalId") }}
+            </div>
+          </div>
+          <!-- <div class="form-group">
+            <label for="re">Kullanıcı Adı</label>
+            <input id="re" type="text" formControlName="re" />
+          </div> -->
+        </div>
+        <div class="modal-footer">
+          <button
+            id="addFormCancelButton"
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Vazgeç
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!customerAddForm.valid"
+          >
+            Kaydet
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div
+  class="modal fade"
+  id="editModal"
+  tabindex="-1"
+  aria-labelledby="editModal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="editModal">Müşteri Güncelle</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form [formGroup]="customerEditForm" (ngSubmit)="edit()">
+        <div class="modal-body">
+          <input type="hidden" formControlName="id" />
+          <div class="form-group">
+            <label for="firstName" class="form-label">Müşteri Adı</label>
+            <input
+              id="firstName"
+              class="form-control"
+              type="text"
+              formControlName="firstName"
+              [class.is-invalid]="isInvalid(customerEditForm, 'firstName')"
+            />
+          </div>
+          <div
+            class="invalid-feedback"
+            *ngIf="isInvalid(customerEditForm, 'firstName')"
+          >
+            {{ getErrorMessage(customerEditForm, "firstName") }}
+          </div>
+          <div class="form-group">
+            <label for="lastName" class="form-label">Müşteri Soyadı</label>
+            <input
+              id="lastName"
+              class="form-control"
+              type="text"
+              formControlName="lastName"
+              [class.is-invalid]="isInvalid(customerEditForm, 'lastName')"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="isInvalid(customerEditForm, 'lastName')"
+            >
+              {{ getErrorMessage(customerEditForm, "lastName") }}
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="nationalId" class="form-label"
+              >Müşteri T.C. Kimlik Numarası</label
+            >
+            <input
+              id="nationalId"
+              class="form-control"
+              type="text"
+              formControlName="nationalId"
+              [class.is-invalid]="isInvalid(customerEditForm, 'nationalId')"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="isInvalid(customerEditForm, 'nationalId')"
+            >
+              {{ getErrorMessage(customerEditForm, "nationalId") }}
+            </div>
+          </div>
+          <!-- <div class="form-group">
+            <label for="re">Kullanıcı Adı</label>
+            <input id="re" type="text" formControlName="re" />
+          </div> -->
+        </div>
+        <div class="modal-footer">
+          <button
+            id="editFormCancelButton"
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Vazgeç
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!customerEditForm.valid"
+          >
+            Kaydet
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
