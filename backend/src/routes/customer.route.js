@@ -13,7 +13,7 @@ const router = express.Router();
 router.use(authenticateJWT);
 router.get("/", getCustomers);
 router.post("/", createCustomer);
-router.put("/:id", updateCustomer);
+router.put("/", updateCustomer);
 router.delete("/:id", deleteCustomer);
 
 export default router;

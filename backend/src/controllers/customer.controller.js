@@ -19,9 +19,7 @@ export async function createCustomer(req, res, next) {
 
     res
       .status(201)
-      .json(
-        ApiSuccess.response("Müşteri başarıyla oluşturuldu.", { customer })
-      );
+      .json(ApiSuccess.response("Müşteri başarıyla oluşturuldu.", customer));
   } catch (error) {
     next(error);
   }
@@ -30,11 +28,11 @@ export async function createCustomer(req, res, next) {
 export async function getCustomers(req, res, next) {
   try {
     const customers = await listCustomers();
-    res.status(200).json(
-      ApiSuccess.response("Müşteri listesi başarıyla getirildi.", {
-        customers,
-      })
-    );
+    res
+      .status(200)
+      .json(
+        ApiSuccess.response("Müşteri listesi başarıyla getirildi.", customers)
+      );
   } catch (error) {
     next(error);
   }
@@ -42,13 +40,11 @@ export async function getCustomers(req, res, next) {
 
 export async function updateCustomer(req, res, next) {
   try {
-    const updated = await editCustomer(req.params.id, req.body);
+    const updated = await editCustomer(req.body.id, req.body);
     if (!updated) throw new ApiError(404, "Kayıt bulunamadı");
-    res.status(200).json(
-      ApiSuccess.response("Müşteri başarıyla güncellendi.", {
-        updated,
-      })
-    );
+    res
+      .status(200)
+      .json(ApiSuccess.response("Müşteri başarıyla güncellendi.", updated));
   } catch (error) {
     next(error);
   }

@@ -4,6 +4,7 @@ import {
   updateCustomer,
   deleteCustomer,
   getCustomerById,
+  findCustomerByNationalId,
 } from "../repositories/customer.repository.js";
 import { ApiError } from "../utils/ApiError.js";
 
@@ -12,6 +13,14 @@ export const addCustomer = async (data) => {
 
   if (!/^\d{11}$/.test(nationalId)) {
     throw new ApiError(400, "TC Kimlik Numarası 11 haneli olmalıdır");
+  }
+
+  const existingNationalId = await findCustomerByNationalId(nationalId);
+  if (existingNationalId) {
+    throw new ApiError(
+      400,
+      "Bu TC Kimlik Numarası ile kayıtlı bir müşteri zaten var"
+    );
   }
 
   const registerDate = new Date().toISOString();

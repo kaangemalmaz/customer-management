@@ -10,7 +10,7 @@ export async function createCustomer({
 }) {
   try {
     const result = await db.query(
-      `INSERT INTO customers (first_name, last_name, tc_no, register_date)
+      `INSERT INTO customers (first_name, last_name, nationalid, register_date)
        VALUES ($1, $2, $3, $4) RETURNING *`,
       [firstName, lastName, nationalId, registerDate]
     );
@@ -26,16 +26,14 @@ export async function createCustomer({
 
 export async function getAllCustomers() {
   try {
-    const result = await db.query(
-      `SELECT * FROM customers ORDER BY register_date DESC`
-    );
+    const result = await db.query(`SELECT * FROM customers ORDER BY id ASC`);
     return result.rows.map(
       (row) =>
         new Customer({
           id: row.id,
           firstName: row.first_name,
           lastName: row.last_name,
-          tcNo: row.tc_no,
+          nationalId: row.nationalid,
           registerDate: row.register_date,
         })
     );
@@ -68,7 +66,7 @@ export async function updateCustomer(id, fields) {
     const { firstName, lastName, nationalId } = fields;
 
     const result = await db.query(
-      `UPDATE customers SET first_name = $1, last_name = $2, tc_no = $3 WHERE id = $4 RETURNING *`,
+      `UPDATE customers SET first_name = $1, last_name = $2, nationalid = $3 WHERE id = $4 RETURNING *`,
       [firstName, lastName, nationalId, id]
     );
     return result.rows[0] || null;
@@ -86,5 +84,21 @@ export async function deleteCustomer(id) {
     await db.query(`DELETE FROM customers WHERE id = $1`, [id]);
   } catch (error) {
     throw new ApiError(500, "Müşteri silinirken bir hata oluştu", error.detail);
+  }
+}
+
+export async function findCustomerByNationalId(nationalId) {
+  try {
+    const result = await db.query(
+      `SELECT * FROM customers WHERE nationalid = $1`,
+      [nationalId]
+    );
+    return result.rows[0] || null;
+  } catch (error) {
+    throw new ApiError(
+      500,
+      "Müşteri sorgulanırken bir hata oluştu",
+      error.detail
+    );
   }
 }

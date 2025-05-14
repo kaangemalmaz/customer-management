@@ -15,7 +15,7 @@ export const initializeDatabase = async () => {
       id SERIAL PRIMARY KEY,
       first_name VARCHAR(100) NOT NULL,
       last_name VARCHAR(100) NOT NULL,
-      tc_no CHAR(11) NOT NULL UNIQUE,
+      nationalId CHAR(11) NOT NULL UNIQUE,
       register_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
   `);

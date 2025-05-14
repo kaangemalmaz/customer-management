@@ -3,11 +3,11 @@
  * @property {number} id - Unique identifier for the customer
  * @property {string} firstName - Customer's first name
  * @property {string} lastName - Customer's last name
- * @property {string} tcNo - National identity number (e.g., Turkish TC Kimlik No)
+ * @property {string} nationalId - National identity number (e.g., Turkish TC Kimlik No)
  * @property {Date} registerDate - Date when the customer was registered
  */
 export class Customer {
-  constructor({ id, firstName, lastName, tcNo, registerDate }) {
+  constructor({ id, firstName, lastName, nationalId, registerDate }) {
     /**
      * @type {number}
      */
@@ -26,7 +26,7 @@ export class Customer {
     /**
      * @type {string}
      */
-    this.tcNo = tcNo;
+    this.nationalId = nationalId;
 
     /**
      * @type {Date}
