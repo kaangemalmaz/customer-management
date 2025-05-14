@@ -30,7 +30,9 @@
         <td scope="row">{{ customer.firstName }}</td>
         <td scope="row">{{ customer.lastName }}</td>
         <td scope="row">{{ customer.nationalId }}</td>
-        <td scope="row">{{ customer.registerDate }}</td>
+        <td scope="row">
+          {{ customer.registerDate | date : "dd-MM-yyyy hh:mm" }}
+        </td>
         <td scope="row">
           <button
             class="btn btn-outline-warning btn-sm"
@@ -129,10 +131,22 @@
               {{ getErrorMessage(customerAddForm, "nationalId") }}
             </div>
           </div>
-          <!-- <div class="form-group">
-            <label for="re">Kullanıcı Adı</label>
-            <input id="re" type="text" formControlName="re" />
-          </div> -->
+          <div class="form-group">
+            <label for="registerDate" class="form-label">Kayıt Tarihi</label>
+            <input
+              id="registerDate"
+              class="form-control"
+              type="datetime-local"
+              formControlName="registerDate"
+              [class.is-invalid]="isInvalid(customerAddForm, 'registerDate')"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="isInvalid(customerAddForm, 'registerDate')"
+            >
+              {{ getErrorMessage(customerAddForm, "registerDate") }}
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button
@@ -228,10 +242,22 @@
               {{ getErrorMessage(customerEditForm, "nationalId") }}
             </div>
           </div>
-          <!-- <div class="form-group">
-            <label for="re">Kullanıcı Adı</label>
-            <input id="re" type="text" formControlName="re" />
-          </div> -->
+          <div class="form-group">
+            <label for="registerDate" class="form-label">Kayıt Tarihi</label>
+            <input
+              id="registerDate"
+              class="form-control"
+              type="datetime-local"
+              formControlName="registerDate"
+              [class.is-invalid]="isInvalid(customerEditForm, 'registerDate')"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="isInvalid(customerEditForm, 'registerDate')"
+            >
+              {{ getErrorMessage(customerEditForm, "registerDate") }}
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button

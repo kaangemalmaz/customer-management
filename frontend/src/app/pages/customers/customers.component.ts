@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment.development';
 import { ApiSuccess } from '../../common/models/api-success.model';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SwalAlertService } from '../../common/services/swal-alert.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-customers',
@@ -28,7 +29,7 @@ export class CustomersComponent implements OnInit {
   customerAddForm!: FormGroup;
   customerEditForm!: FormGroup;
 
-  constructor(private genericHttpService: GenericHttpService, private readonly fb: FormBuilder, private readonly swalAlertService: SwalAlertService) { }
+  constructor(private genericHttpService: GenericHttpService, private readonly fb: FormBuilder, private readonly swalAlertService: SwalAlertService, private date: DatePipe) { }
 
   ngOnInit(): void {
     this.getAllCustomers();
@@ -46,7 +47,8 @@ export class CustomersComponent implements OnInit {
     this.customerAddForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.maxLength(10)]],
-      nationalId: ['', [Validators.required, Validators.pattern(/^\d{11}$/)]]
+      nationalId: ['', [Validators.required, Validators.pattern(/^\d{11}$/)]],
+      registerDate: ['', [Validators.required]]
     });
   }
 
@@ -55,7 +57,8 @@ export class CustomersComponent implements OnInit {
       id: ['', [Validators.required]],
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.maxLength(10)]],
-      nationalId: ['', [Validators.required, Validators.pattern(/^\d{11}$/)]]
+      nationalId: ['', [Validators.required, Validators.pattern(/^\d{11}$/)]],
+      registerDate: ['', [Validators.required]]
     });
   }
 
@@ -64,13 +67,20 @@ export class CustomersComponent implements OnInit {
     this.genericHttpService.post<ApiSuccess<CustomerModel>>(environment.customerApiUrl, this.customerAddForm.value, () => {
       this.swalAlertService.success("Müşteri Kaydı Başarılı!");
       document.getElementById("addFormCancelButton")?.click();
+      this.customerAddForm.reset();
       this.getAllCustomers();
     });
   }
 
   get(model: CustomerModel) {
     this.selectedCustomer = { ...model };
-    this.customerEditForm.patchValue({ ...model });
+    this.customerEditForm.patchValue({
+      id: model.id,
+      firstName: model.firstName,
+      lastName: model.lastName,
+      nationalId: model.nationalId,
+      registerDate: model.registerDate ? this.date.transform(model.registerDate, 'yyyy-MM-ddTHH:mm') : null
+    });
   }
 
 
@@ -78,6 +88,7 @@ export class CustomersComponent implements OnInit {
     this.genericHttpService.put<ApiSuccess<CustomerModel>>(environment.customerApiUrl, this.customerEditForm.value, () => {
       this.swalAlertService.success("Müşteri Başarıyla Güncellenmiştir!");
       document.getElementById("editFormCancelButton")?.click();
+      this.customerEditForm.reset();
       this.getAllCustomers();
     });
   }
